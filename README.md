@@ -25,7 +25,7 @@ Before using this collection, ensure you have:
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/shhv/duo_postman_api_collections.git
+git clone https://github.com/duosecurity/duo_postman_api_collections.git
 cd duo_postman_api_collections
 ```
 
