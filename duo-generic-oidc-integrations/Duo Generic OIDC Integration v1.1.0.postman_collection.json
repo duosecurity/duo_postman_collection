@@ -1,0 +1,361 @@
+{
+	"info": {
+		"_postman_id": "dc2eb369-08be-4322-ad88-6780443e9370",
+		"name": "Duo Generic OIDC Integration",
+		"description": "This collection provides a several example requests and a bit of automation to make exploration and testing of Duo Generic OIDC integrations easier.\n\nThe examples rely on the use of the [https://oidcdebugger.com/](https://oidcdebugger.com/) online tool. This tool provides the ability to simulate the Relying Party(RP) interaction with Duo.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12279134"
+	},
+	"item": [
+		{
+			"name": "Discovery URL",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{oidc_apihost}}/oidc/{{oidc_client_id}}/.well-known/openid-configuration",
+					"protocol": "https",
+					"host": [
+						"{{oidc_apihost}}"
+					],
+					"path": [
+						"oidc",
+						"{{oidc_client_id}}",
+						".well-known",
+						"openid-configuration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request Access Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Verify OIDC Access Token\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.access_token).to.exist.and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");",
+							"});",
+							"",
+							"pm.test(\"Verify OIDC Refresh Token\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.refresh_token).to.exist.and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");",
+							"",
+							"    pm.collectionVariables.set(\"oidc_refresh_token\", responseData.refresh_token);",
+							"    console.log(\"Refresh token: \", responseData.refresh_token);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"description": "[REQUIRED] Do not change",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "{{oidc_auth_code}}",
+							"description": "Authorization code returned from successful request to the Authorization URL. This variable is stored with the request and not at the Collection level.",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{oidc_client_id}}",
+							"description": "Generic OIDC integration Client ID",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{oidc_client_secret}}",
+							"description": "Generic OIDC integration Client Secret",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "{{oidc_redirect_url}}",
+							"description": "Generic OIDC Sign-In Redirect URL (provided by RP)",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://{{oidc_apihost}}/oidc/{{oidc_client_id}}/token",
+					"protocol": "https",
+					"host": [
+						"{{oidc_apihost}}"
+					],
+					"path": [
+						"oidc",
+						"{{oidc_client_id}}",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request New Token Using Refresh Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"pm.test(\"Verify OIDC Refresh Token\", function () {",
+							"    const responseData = pm.response.json();",
+							"",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.refresh_token).to.exist.and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");",
+							"",
+							"    pm.collectionVariables.set(\"oidc_refresh_token\", responseData.refresh_token);",
+							"    console.log(\"Refresh token: \", responseData.refresh_token);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "refresh_token",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{oidc_client_id}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{oidc_client_secret}}",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "{{oidc_redirect_url}}",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "{{oidc_refresh_token}}",
+							"description": "OIDC refresh_token returned from successful request for access token",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://{{oidc_apihost}}/oidc/{{oidc_client_id}}/token",
+					"protocol": "https",
+					"host": [
+						"{{oidc_apihost}}"
+					],
+					"path": [
+						"oidc",
+						"{{oidc_client_id}}",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh Token Inspection",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const client_id = pm.variables.get(\"oidc_client_id\");",
+							"const client_secret = pm.variables.get(\"oidc_client_secret\");",
+							"const auth_string = \"Basic \" + Buffer.from(client_id + \":\" + client_secret).toString('base64');",
+							"",
+							"console.log(\"Auth String: \" + auth_string);",
+							"",
+							"pm.request.headers.add({",
+							"    key: \"Authorization\",",
+							"    value: auth_string",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "{{oidc_refresh_token}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://{{oidc_apihost}}/oidc/{{oidc_client_id}}/token_introspection",
+					"protocol": "https",
+					"host": [
+						"{{oidc_apihost}}"
+					],
+					"path": [
+						"oidc",
+						"{{oidc_client_id}}",
+						"token_introspection"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Info",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{oidc_access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{oidc_apihost}}/oidc/{{oidc_client_id}}/userinfo",
+					"protocol": "https",
+					"host": [
+						"{{oidc_apihost}}"
+					],
+					"path": [
+						"oidc",
+						"{{oidc_client_id}}",
+						"userinfo"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "oidc_client_secret",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "oidc_client_id",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "oidc_redirect_url",
+			"value": "https://oidcdebugger.com/debug",
+			"type": "default"
+		},
+		{
+			"key": "oidc_refresh_token",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "oidc_apihost",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "oidc_access_token",
+			"value": ""
+		}
+	]
+}

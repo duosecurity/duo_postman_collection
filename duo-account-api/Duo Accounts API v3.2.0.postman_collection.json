@@ -1,0 +1,502 @@
+{
+	"info": {
+		"_postman_id": "82f64049-43fc-4563-8c73-bb15ddb9dae1",
+		"name": "Duo Accounts API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12279134"
+	},
+	"item": [
+		{
+			"name": "Retrieve Accounts",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{apihost}}/accounts/v1/account/list",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"accounts",
+						"v1",
+						"account",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{apihost}}/accounts/v1/account/create?name={{account_name}}",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"accounts",
+						"v1",
+						"account",
+						"create"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{account_name}}",
+							"description": "Required. Name for the new customer"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{apihost}}/accounts/v1/account/delete?account_id={{account_id}}",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"accounts",
+						"v1",
+						"account",
+						"delete"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"description": "Required. ID of the customer account to delete as returned by Retrieve Accounts. This is a 20 character string, for example DA9VZOC5X63I2W72NRP9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Edition",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{apihost}}/accounts/v1/billing/edition?account_id={{account_id}}",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"accounts",
+						"v1",
+						"billing",
+						"edition"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"description": "Required. The child customer account ID as returned by Retrieve Accounts. This is a 20 character string, for example DA9VZOC5X63I2W72NRP9."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set Edition",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{apihost}}/accounts/v1/billing/edition?account_id={{account_id}}&edition={{edition}}",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"accounts",
+						"v1",
+						"billing",
+						"edition"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"description": "Required. The child customer account ID as returned by Retrieve Accounts. This is a 20 character string, for example DA9VZOC5X63I2W72NRP9."
+						},
+						{
+							"key": "edition",
+							"value": "{{edition}}",
+							"description": "Required. The edition to set. This should be one of:\nENTERPRISE - The Duo Essentials edition.\nPLATFORM - The Duo Advantage edition.\nBEYOND - The Duo Premier edition."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Telephony Credits",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{apihost}}/accounts/v1/billing/telephony?account_id={{account_id}}",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"accounts",
+						"v1",
+						"billing",
+						"telephony"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"description": "Required. The child customer account ID as returned by Retrieve Accounts. This is a 20 character string, for example DA9VZOC5X63I2W72NRP9."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set Telephony Credits",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{apihost}}/accounts/v1/billing/edition?account_id={{account_id}}&credits={{edition}}",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"accounts",
+						"v1",
+						"billing",
+						"edition"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "{{account_id}}",
+							"description": "Required. The child customer account ID as returned by Retrieve Accounts. This is a 20 character string, for example DA9VZOC5X63I2W72NRP9."
+						},
+						{
+							"key": "credits",
+							"value": "{{edition}}",
+							"description": "Required. The total number of credits that the child account will have after transferring credits from the parent account."
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Duo API Postman Pre-Request script v3.2.0",
+					"// Last updated 2025-02-21 by: Mark Tripod",
+					"",
+					"var URL = require('url');",
+					"var cryptojs = require('crypto-js');",
+					"var btoa = require('btoa');",
+					"",
+					"function writeHeader(text) {",
+					"    var breakStr = '============================================================================';",
+					"    var fullWidth = breakStr.length;",
+					"    var padding = (fullWidth - text.length) / 2;",
+					"    var paddingString = ' '.repeat(padding);",
+					"    var msgStr = paddingString + text + paddingString;",
+					"    console.log(breakStr);",
+					"    console.log(msgStr);",
+					"    console.log(breakStr);",
+					"}",
+					"",
+					"function replacePathVars() {",
+					"    console.log(' *** Entering replacePathVars() ***');",
+					"    var pathIndex = 0;",
+					"    pm.request.url.path.forEach( function(element) {",
+					"        if (element.includes('{{')) {",
+					"            console.log(`    Variable ${element} found in request URL`);",
+					"            var tmpElement = element.replace('{{', '').replace('}}', '');",
+					"            console.log(`    Looking for value assigned to ${tmpElement}`);",
+					"            var newElement = getVar(tmpElement);",
+					"            pm.request.url.path[pathIndex] = newElement;",
+					"            console.log(`    path element ${pathIndex} is now ${pm.request.url.path[pathIndex]}`);",
+					"        }",
+					"        pathIndex += 1;",
+					"    });",
+					"}",
+					"",
+					"function replaceQueryVars() {",
+					"    console.log(' *** Entering replaceQueryVars() ***');",
+					"    for(var i = 0; i < pm.request.url.query.count(); i++) {",
+					"        console.log('.  Query string key: ', pm.request.url.query.idx(i).key);",
+					"        if (pm.request.url.query.idx(i).disabled == true) {",
+					"            console.log('.   Skipping disabled query string parameter', pm.request.url.query.idx(i).key);",
+					"            continue;",
+					"        }",
+					"        if (pm.request.url.query.idx(i).key.includes('{{')) {",
+					"            pm.request.url.query.idx(i).key = pm.variables.replaceIn(pm.request.url.query.idx(i).key);",
+					"            console.log('.  New key: ', pm.request.url.query.idx(i).key);",
+					"        }",
+					"        console.log('.  Query string value: ', pm.request.url.query.idx(i).value);",
+					"        if (pm.request.url.query.idx(i).value.includes('{{')) {",
+					"            pm.request.url.query.idx(i).value = pm.variables.replaceIn(pm.request.url.query.idx(i).value);",
+					"            console.log('.  New value: ', pm.request.url.query.idx(i).value);",
+					"        }",
+					"    }",
+					"}",
+					"",
+					"function replaceBodyVars() {",
+					"    console.log('  *** Entering replaceBodyVars() ***');",
+					"    pm.request.body.formdata.each.apply(function (bodyElement) {",
+					"        console.log(bodyElement);",
+					"    });",
+					"}",
+					"",
+					"function getVar(varName) {",
+					"    var tmpVar = pm.variables.get(varName);",
+					"    if (!tmpVar) {",
+					"        console.log(`WARNING: ${varName} variable is missing or invalid.`);",
+					"        throw new Error('Please ensure that the ikey, skey, and apihost entries are defined with proper values in either the Postman Environment or Collection variables.');",
+					"    } else {",
+					"        console.log(`  ===> ${varName} value found.`);",
+					"    }",
+					"    return tmpVar;",
+					"}",
+					"",
+					"/**",
+					" * @param {pm.request.method} httpMethod - The pm.request.method property",
+					" * @param {pm.request.body} requestBody - The pm.request.body property",
+					" */",
+					"function getAuthHeader(httpMethod, hostname, path, q_str, requestBody, duo_auth_ver) {",
+					"    writeHeader('Calculating Duo Authentication header');",
+					"",
+					"    console.log('Method: ', httpMethod);",
+					"    console.log('hostname: ', hostname);",
+					"    console.log('Path: ', path);",
+					"    console.log('Query string: ', q_str);",
+					"    console.log('POST body: ', requestBody);",
+					"    console.log('Duo Auth Version: ', duo_auth_ver);",
+					"",
+					"    writeHeader('Retrieving Required Duo API Information');",
+					"",
+					"    var IKEY = getVar('ikey');",
+					"    var SKEY = getVar('skey');",
+					"    var APIHOST = getVar('apihost');",
+					"",
+					"    console.log('   ikey: ', IKEY);",
+					"    console.log('   skey: ************************************');",
+					"    console.log('   apihost: ', APIHOST);",
+					"",
+					"    api_call = path;",
+					"    console.log('.   api_call: ', api_call);",
+					"",
+					"    var AUTH_TYPE;",
+					"    var hmacDigest;",
+					"    var post_or_put = [\"POST\", \"PUT\"]",
+					"",
+					"    writeHeader('Calculating Timestamp Header Value');",
+					"",
+					"    //The current time, formatted as RFC 2822. This must be the same string as the \"Date\" header (or X-Duo-Date header).",
+					"    // TODO: explore other options besides the 'moment' module since it is so large and no longer being developed.",
+					"    var moment = require('moment');",
+					"    var timestamp = moment().format(\"ddd, DD MMM YYYY HH:mm:ss ZZ\");",
+					"    pm.variables.set(\"timestampHeader\", timestamp);",
+					"    console.log('timestamp header value: ', timestamp);",
+					"",
+					"    writeHeader('Calculating Duo Authentication Header Value');",
+					"",
+					"    switch (duo_auth_ver) {",
+					"        case 'v2':",
+					"            console.log('API request is for a v1 endpoint. Using HMAC-SHA1 based canonical v2 authentication header.');",
+					"            AUTH_TYPE = 'HMAC-SHA1';",
+					"            var body_length = Object.keys(requestBody).length;",
+					"            var params_unsorted = \"\";",
+					"            var params_array = [];",
+					"",
+					"            console.log('requestBody: ', requestBody);",
+					"",
+					"            //Create unsorted array of parameters from either URL or Body",
+					"            //Assuming POST parameters are in the Body, GET paramters are in URL",
+					"            //(technically it looks like POST can be in the URL as well)",
+					"            if (post_or_put.includes(httpMethod) && requestBody.mode == 'formdata') {",
+					"                console.log('Processing form data for POST request ...');",
+					"                requestBody.formdata.each(function (parameter1) {",
+					"                    if (! parameter1.disabled) {",
+					"                        params_unsorted = parameter1.key + \"=\" + parameter1.value;",
+					"                        params_array.push(params_unsorted);",
+					"                    }",
+					"                });",
+					"            }",
+					"",
+					"            console.log('params_unsorted before split: ', params_unsorted);",
+					"            if (q_str) {",
+					"                console.log('Processing query string parameters ...');",
+					"                params_array = q_str.split(\"&\");",
+					"                console.log('params_array after split: ', params_array);",
+					"            }",
+					"            ",
+					"            console.log('params_array: ', params_array);",
+					"            params_array.sort();                    //lexicographically sort parameters by key",
+					"            var encoded_params = \"\";               ",
+					"            if (params_array[0] !== \"\"){            //check if there are any Params to encode and create the string from",
+					"                var encoded_params_array = params_array.map(urlEncodeParams);   //create URL-encoded array of key=value pairs from the sorted array",
+					"                encoded_params = encoded_params_array.join(\"&\");                //create string of parameters joined by &",
+					"            }",
+					"            console.log('encoded params: ', encoded_params);",
+					"            //Then concatenate these components with (line feed) newlines",
+					"            var requestData =  timestamp+\"\\n\"+httpMethod+\"\\n\"+hostname+\"\\n\"+api_call+\"\\n\"+encoded_params;",
+					"            console.log('requesstData: ', requestData);",
+					"            //compute the HMAC-SHA1 of this canonical representation, using your Duo application's secret key as the HMAC key",
+					"            hmacDigest = cryptojs.HmacSHA1(requestData, SKEY);",
+					"            console.log('hmacDigest: ', hmacDigest);",
+					"            pm.request.headers.add({key: 'Content-Type', value: 'application/x-www-form-urlencoded' });",
+					"            break;",
+					"        case 'v5':",
+					"            console.log('API request is for a v2 endpoint. Using HMAC-SHA512 based canonical v5 authentication header.');",
+					"            AUTH_TYPE = 'HMAC-SHA512';",
+					"            var body_length = Object.keys(requestBody).length;",
+					"            var encoded_params = \"\";  ",
+					"            var requestData = \"\";",
+					"            ",
+					"            console.log('Body length: ', body_length)",
+					"",
+					"            if (post_or_put.includes(httpMethod) && body_length != 0) {  ",
+					"                var jsonData = JSON.parse(pm.request.body.toJSON().raw);",
+					"                jsonData = JSON.stringify(jsonData);",
+					"                encoded_params = jsonData;",
+					"                console.log('encoded_params: ', encoded_params);",
+					"                requestData =  timestamp+\"\\n\"+httpMethod+\"\\n\"+hostname+\"\\n\"+api_call+\"\\n\"+ \"\" +\"\\n\"+cryptojs.SHA512(encoded_params)+\"\\n\"+cryptojs.SHA512(\"\");",
+					"                pm.request.body = jsonData;",
+					"            }",
+					"            else {",
+					"                params_unsorted = q_str;",
+					"                console.log('Unsorted parameters length: ', params_unsorted.length)",
+					"                if (params_unsorted.length > 0) {",
+					"                    params_array = params_unsorted.split(\"&\");",
+					"                    params_array.sort(); ",
+					"                    encoded_params_array = params_array.map(urlEncodeParams);   //create URL-encoded array of key=value pairs from the sorted array",
+					"                    encoded_params = encoded_params_array.join(\"&\");  ",
+					"                }",
+					"                requestData = timestamp+\"\\n\"+httpMethod+\"\\n\"+hostname+\"\\n\"+api_call+\"\\n\"+encoded_params+\"\\n\"+cryptojs.SHA512(\"\")+\"\\n\"+cryptojs.SHA512(\"\");",
+					"            }",
+					"             //compute the HMAC-SHA512 of this canonical representation, using your Duo application's secret key as the HMAC key",
+					"            hmacDigest = cryptojs.HmacSHA512(requestData, SKEY);",
+					"            pm.request.headers.add({key: 'Content-Type', value: 'application/json' });",
+					"            break;",
+					"    }",
+					"          ",
+					"    //Use HTTP Basic Authentication for the request, using your integration key as the username and the HMAC signature as the password.",
+					"    var prebase = IKEY+\":\"+ hmacDigest;",
+					"    console.log('prebase: ', prebase);",
+					"     ",
+					"    //encodes a string in base-64",
+					"    var baseComplete = btoa(prebase);",
+					"    console.log('baseComplete: ', baseComplete);",
+					" ",
+					"    var authHeader = \"Basic \"+ baseComplete;",
+					"    console.log('hmacauthheader: ', authHeader);",
+					"    return authHeader;",
+					"}",
+					"",
+					" ",
+					"function urlEncodeParams(value, index, array) {",
+					"    //split the Key and Value at the first \"=\", URL-encode the Value, and rejoin them with an \"=\"",
+					"    //If the separator in the split() is a regular expression that contains capturing parentheses (), matched results are included in the array",
+					"    return value.split(/=(.+)/)[0] + \"=\" + encodeURIComponent(value.split(/=(.+)/)[1]);",
+					"}",
+					"",
+					"// Begin script execution",
+					"writeHeader('Begin Creation of Duo API Authentication Headers');",
+					"",
+					"console.log('PM request object: ', pm.request);",
+					"console.log('PM request host: ', pm.request.url.host);",
+					"console.log('Request data: ', pm.request.data);",
+					"",
+					"var duo_auth_ver;",
+					"let req_url = pm.request.url.getPath();",
+					"console.log('Request URL: ', req_url);",
+					"",
+					"if (pm.request.url.query && pm.request.url.query.count() > 0) {",
+					"    console.log('Request has a query string defined. Checking for any variable definitions...');",
+					"    replaceQueryVars();",
+					"} else {",
+					"    console.log('Request has no query string.');",
+					"}",
+					"",
+					"var q_str = pm.request.url.getQueryString();",
+					"console.log('PM parsed query string: ', q_str);",
+					"var pmQueryStringElements = pm.request.url.query.toObject();",
+					"console.log('PM query string object: ', pmQueryStringElements);",
+					"",
+					"console.log('Query string: ', q_str);",
+					"if (!q_str) {",
+					"    q_str = \"\";",
+					"}",
+					"console.log('q_str length: ', q_str.length);",
+					"var path = pm.request.url.path;",
+					"console.log('postman request path object: ', path);",
+					"console.log('Replacing any variables that may be in the path.')",
+					"replacePathVars();",
+					"path = path.join('/');",
+					"path = '/' + path;",
+					"console.log('Path string: ', path.toString());",
+					"",
+					"if (req_url.includes('/v1/') || req_url.includes('/auth/v2/')) {",
+					"    duo_auth_ver = 'v2'; ",
+					"} else {",
+					"    duo_auth_ver = 'v5'; ",
+					"}",
+					"",
+					"// Override the Duo Authorization version for newer bulk action and v3 endpoints",
+					"if (req_url.includes('bulk') || req_url.includes('/skey') || req_url.includes('/v3/')) {",
+					"    duo_auth_ver = 'v5';",
+					"}",
+					"",
+					"",
+					"console.log('Duo Canonical Authentication Version:', duo_auth_ver);",
+					"",
+					"if (pm.request.url.host[0] == '{{apihost}}') {",
+					"    console.log('Request URL contains {{apihost}} variable. Checking if that value is defined in the Postman Environment.');",
+					"    var hostname = getVar('apihost');",
+					"    pm.request.url.host[0] = hostname;",
+					"}",
+					"",
+					"pm.variables.set(\"hmacAuthHeader\", getAuthHeader(pm.request.method, pm.request.url.host[0], path, q_str, pm.request.body, duo_auth_ver));",
+					"",
+					"pm.request.headers.add({key: 'Date', value: pm.variables.get(\"timestampHeader\")});",
+					"pm.request.headers.add({key: 'Authorization', value: pm.variables.get(\"hmacAuthHeader\")});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

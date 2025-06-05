@@ -1,0 +1,425 @@
+{
+	"info": {
+		"_postman_id": "e5eb3d8c-68ab-4ec2-b49d-bfc873b5427a",
+		"name": "Duo OIDC Auth API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3158097"
+	},
+	"item": [
+		{
+			"name": "health_check",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {},
+				"followRedirects": false
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "https://{{client_host}}/oauth/v1/health_check?client_id={{client_id}}&client_assertion={{jwt}}",
+					"protocol": "https",
+					"host": [
+						"{{client_host}}"
+					],
+					"path": [
+						"oauth",
+						"v1",
+						"health_check"
+					],
+					"query": [
+						{
+							"key": "client_id",
+							"value": "{{client_id}}"
+						},
+						{
+							"key": "client_assertion",
+							"value": "{{jwt}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "authorize",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "https://{{client_host}}/oauth/v1/authorize?response_type=code&client_id={{client_id}}&request={{jwt}}",
+					"protocol": "https",
+					"host": [
+						"{{client_host}}"
+					],
+					"path": [
+						"oauth",
+						"v1",
+						"authorize"
+					],
+					"query": [
+						{
+							"key": "response_type",
+							"value": "code",
+							"description": "Required"
+						},
+						{
+							"key": "client_id",
+							"value": "{{client_id}}",
+							"description": "Required"
+						},
+						{
+							"key": "request",
+							"value": "{{jwt}}",
+							"description": "Required"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "{{redirect_uri}}",
+							"description": "Optional",
+							"disabled": true
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"description": "Optional",
+							"disabled": true
+						},
+						{
+							"key": "nonce",
+							"value": "",
+							"description": "Optional",
+							"disabled": true
+						},
+						{
+							"key": "state",
+							"value": "0123456789123456",
+							"description": "Optional",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "token",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {},
+				"followRedirects": false
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "https://{{client_host}}/oauth/v1/token?grant_type=authorization_code&code=change_me_get_from_authorize_endpoint&redirect_uri={{redirect_uri}}&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion={{jwt}}",
+					"protocol": "https",
+					"host": [
+						"{{client_host}}"
+					],
+					"path": [
+						"oauth",
+						"v1",
+						"token"
+					],
+					"query": [
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"description": "Required"
+						},
+						{
+							"key": "code",
+							"value": "change_me_get_from_authorize_endpoint",
+							"description": "Required"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "{{redirect_uri}}",
+							"description": "Required"
+						},
+						{
+							"key": "client_assertion_type",
+							"value": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+							"description": "Required"
+						},
+						{
+							"key": "client_assertion",
+							"value": "{{jwt}}",
+							"description": "Required"
+						},
+						{
+							"key": "client_id",
+							"value": "{{client_id}}",
+							"description": "Optional",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"let cryptoJS = require('crypto-js');",
+					"let moment = require('moment');",
+					"",
+					"let path = pm.request.url.getPath().toString();",
+					"let current_time = moment().unix();",
+					"",
+					"let header = {",
+					"    \"alg\": pm.collectionVariables.get(\"algorithm\"),",
+					"    \"typ\": \"JWT\"",
+					"};",
+					"",
+					"function base64url(source) {",
+					"    ",
+					"    // Encode in classical base64",
+					"    encodedSource = CryptoJS.enc.Base64.stringify(source);",
+					"    // Remove padding equal characters",
+					"    encodedSource = encodedSource.replace(/=+$/, '');",
+					"    // Replace characters according to base64url specifications",
+					"    encodedSource = encodedSource.replace(/\\+/g, '-');",
+					"    encodedSource = encodedSource.replace(/\\//g, '_');",
+					"    return encodedSource;",
+					"}",
+					"",
+					"function makeState(length) {",
+					"    let result = '';",
+					"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+					"    const charactersLength = characters.length;",
+					"    let counter = 0;",
+					"    while (counter < length) {",
+					"      result += characters.charAt(Math.floor(Math.random() * charactersLength));",
+					"      counter += 1;",
+					"    }",
+					"    pm.collectionVariables.set(\"state\", result);",
+					"    return result;",
+					"}",
+					"",
+					"function getSig(token, secret) {",
+					"    let algorithm = pm.collectionVariables.get(\"algorithm\");",
+					"    if(algorithm=='HS512'){",
+					"        return CryptoJS.HmacSHA512(token, secret);",
+					"    }",
+					"    else if(algorithm=='HS256'){",
+					"        return CryptoJS.HmacSHA256(token, secret);",
+					"    }",
+					"}",
+					"",
+					"function getHealthCheckObject() {",
+					"",
+					"    /* REQUIRED */",
+					"    let iss = pm.collectionVariables.get(\"client_id\");",
+					"    let sub = pm.collectionVariables.get(\"client_id\");",
+					"    let aud = 'https://' + pm.collectionVariables.get(\"client_host\") + '/oauth/v1/health_check'",
+					"    let exp = current_time + 300;",
+					"    let jti = CryptoJS.MD5(exp.toString()).toString();",
+					"",
+					"    /*  OPTIONAL */",
+					"    let iat = current_time;",
+					"",
+					"    return {",
+					"        \"iss\": iss,",
+					"        \"sub\": sub,",
+					"        \"aud\": aud,",
+					"        \"exp\": exp,",
+					"        \"jti\": jti,",
+					"        \"iat\": current_time ",
+					"    };",
+					"}",
+					"",
+					"function getAuthorizeObject() {",
+					"    /* REQUIRED */",
+					"    let response_type = 'code';",
+					"    let scope = 'openid';",
+					"    let exp = current_time + 300;",
+					"    let client_id = pm.collectionVariables.get(\"client_id\");",
+					"    let redirect_uri = pm.collectionVariables.get(\"redirect_uri\");",
+					"    let state = makeState(64);",
+					"",
+					"    let duo_uname = pm.collectionVariables.get(\"duo_user\");",
+					"",
+					"    /*  OPTIONAL */",
+					"    let iss = null;",
+					"    let aud = null;",
+					"    let nonce = null;",
+					"    let use_duo_code_attribute = null;",
+					"",
+					"    return {",
+					"        \"response_type\" : response_type,",
+					"        \"scope\" : scope,",
+					"        \"exp\" : exp,",
+					"        \"client_id\" : client_id,",
+					"        \"redirect_uri\" : redirect_uri,",
+					"        \"state\" : state,",
+					"        \"duo_uname\" : duo_uname",
+					"    }",
+					"}",
+					"",
+					"function getTokenObject() {",
+					"    /* REQUIRED */",
+					"    let iss = pm.collectionVariables.get(\"client_id\");",
+					"    let sub = pm.collectionVariables.get(\"client_id\");",
+					"    let aud = 'https://' + pm.collectionVariables.get(\"client_host\") + '/oauth/v1/token';",
+					"    let exp = current_time + 300;",
+					"    let jti = CryptoJS.MD5(exp.toString()).toString();",
+					"",
+					"    /*  OPTIONAL */",
+					"    let iat = current_time;",
+					"",
+					"",
+					"    return {",
+					"        \"iss\" : iss,",
+					"        \"sub\" : sub,",
+					"        \"aud\" : aud,",
+					"        \"exp\" : exp,",
+					"        \"jti\" : jti,",
+					"        \"iat\" : iat",
+					"    }",
+					"}",
+					"",
+					"let stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header));",
+					"let encodedHeader = base64url(stringifiedHeader);",
+					"",
+					"let jwt_data = null;",
+					"",
+					"if(path == '/oauth/v1/authorize') {",
+					"    jwt_data = getAuthorizeObject();",
+					"}",
+					"else if (path == '/oauth/v1/token') {",
+					"    jwt_data = getTokenObject();",
+					"}",
+					"else if (path == '/oauth/v1/health_check') {",
+					"    jwt_data = getHealthCheckObject();",
+					"}",
+					"",
+					"",
+					"let stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(jwt_data));",
+					"let encodedData = base64url(stringifiedData);",
+					"",
+					"let token = encodedHeader + \".\" + encodedData;",
+					"",
+					"let secret = pm.collectionVariables.get(\"client_secret\");",
+					"let signature = getSig(token, secret);",
+					"signature = base64url(signature);",
+					"",
+					"let signedToken = token + \".\" + signature;",
+					"pm.collectionVariables.set(\"jwt\", signedToken);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt",
+			"value": "auto_calculated",
+			"type": "string"
+		},
+		{
+			"key": "state",
+			"value": "auto_calculated",
+			"type": "string"
+		},
+		{
+			"key": "client_id",
+			"value": "change_me",
+			"type": "string"
+		},
+		{
+			"key": "client_secret",
+			"value": "change_me",
+			"type": "string"
+		},
+		{
+			"key": "client_host",
+			"value": "change_me",
+			"type": "string"
+		},
+		{
+			"key": "redirect_uri",
+			"value": "change_me",
+			"type": "string"
+		},
+		{
+			"key": "duo_user",
+			"value": "change_me",
+			"type": "string"
+		},
+		{
+			"key": "algorithm",
+			"value": "HS512",
+			"type": "string"
+		}
+	]
+}
