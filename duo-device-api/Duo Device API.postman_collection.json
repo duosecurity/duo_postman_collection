@@ -1,0 +1,513 @@
+{
+	"info": {
+		"_postman_id": "5058ed01-5879-4748-ba0a-4d0fbf1cf68f",
+		"name": "Duo Device API",
+		"description": "Collection for Duo Device API endpoints (Device Cache operations). Uses HMAC-signed auth headers.\n\n[https://duo.com/docs/deviceapi#overview](https://duo.com/docs/deviceapi#overview)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2238246"
+	},
+	"item": [
+		{
+			"name": "List All Device Caches",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{apihost}}/device/v1/management_systems/{{mkey}}/device_cache",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"device",
+						"v1",
+						"management_systems",
+						"{{mkey}}",
+						"device_cache"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Device Cache",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"console.log(pm.response.json());",
+							"let responseData = pm.response.json();",
+							"console.log(responseData.response[0]);",
+							"postman.setEnvironmentVariable(\"cacheKey\", responseData.response.cache_key);",
+							"console.log(pm.environment.get('cacheKey'))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "https://{{apihost}}/device/v1/management_systems/{{mkey}}/device_cache",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"device",
+						"v1",
+						"management_systems",
+						"{{mkey}}",
+						"device_cache"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activate Device Cache",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{apihost}}/device/v1/management_systems/{{mkey}}/device_cache/{{cacheKey}}/activate",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"device",
+						"v1",
+						"management_systems",
+						"{{mkey}}",
+						"device_cache",
+						"{{cacheKey}}",
+						"activate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Device Cache",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "https://{{apihost}}/device/v1/management_systems/{{mkey}}/device_cache/{{cacheKey}}",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"device",
+						"v1",
+						"management_systems",
+						"{{mkey}}",
+						"device_cache",
+						"{{cacheKey}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Devices to Cache",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "devices",
+							"value": "[{\"device_id\": \"203B489C-F0CE-546E-931D-B2B6E68C340D\"},{\"device_id\": \"203B489C-F0CE-556E-931D-B2B6E68C340D\"},{\"device_id\": \"203B489C-F0CE-566E-931D-B2B6E68C340D\"},{\"device_id\": \"203B489C-F0CE-576E-931D-B2B6E68C340D\"},{\"device_id\": \"203B489C-F0CE-586E-931D-B2B6E68C340D\"},{\"device_id\": \"203B489C-F0CE-596E-931D-B2B6E68C340D\"},{\"device_id\": \"203B489C-F0CE-506E-931D-B2B6E68C340D\"},{\"device_id\": \"203B489C-F0CE-516E-931D-B2B6E68C340D\"},{\"device_id\": \"203B489C-F0CE-526E-931D-B2B6E68C340D\"}]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://{{apihost}}/device/v1/management_systems/{{mkey}}/device_cache/{{cacheKey}}/devices",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"device",
+						"v1",
+						"management_systems",
+						"{{mkey}}",
+						"device_cache",
+						"{{cacheKey}}",
+						"devices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Devices from Cache",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "limit",
+							"value": "2",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "offset",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://{{apihost}}/device/v1/management_systems/{{mkey}}/device_cache/{{cacheKey}}/devices",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"device",
+						"v1",
+						"management_systems",
+						"{{mkey}}",
+						"device_cache",
+						"{{cacheKey}}",
+						"devices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Devices from Cache",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "devices",
+							"value": "[\"203B489C-F0CE-516E-931D-B2B6E68C340D\"]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://{{apihost}}/device/v1/management_systems/{{mkey}}/device_cache/{{cacheKey}}/devices",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"device",
+						"v1",
+						"management_systems",
+						"{{mkey}}",
+						"device_cache",
+						"{{cacheKey}}",
+						"devices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Device Cache",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://{{apihost}}/device/v1/management_systems/{{mkey}}/device_cache/{{cacheKey}}",
+					"protocol": "https",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"device",
+						"v1",
+						"management_systems",
+						"{{mkey}}",
+						"device_cache",
+						"{{cacheKey}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"var URL = require('url');",
+					"",
+					"function getAuthHeader(httpMethod, hostname, path, q_str, requestBody, duo_auth_ver) {",
+					"    console.log('Method:');",
+					"    console.log(httpMethod); // http type: POST, GET, ETC",
+					"    console.log('hostname:');",
+					"    console.log(hostname);",
+					"    console.log('Path:');",
+					"    console.log(path);",
+					"    console.log('Query string:');",
+					"    console.log(q_str);",
+					"    console.log(requestBody); //POST Body, currently not used",
+					"",
+					"//param replace - shhv",
+					"",
+					"    path = realize(path);",
+					"    console.log('Realize path :', path);",
+					"    var IKEY = pm.environment.get('ikey'); //Auth or Admin API IKEY",
+					"    var SKEY = pm.environment.get('skey'); //Auth or Admin API SKEY",
+					"    var API_HOSTNAME = hostname; //Auth or Admin API Hostname",
+					"",
+					"    console.log('IKEY: ' , IKEY);",
+					"    console.log('Auth Type:');",
+					"    console.log(AUTH_TYPE);",
+					"",
+					"",
+					"    // if (path.includes('[mkey]')) {",
+					"    //     var mkey = pm.environment.get('mkey');",
+					"    //     console.log('MKEY replacing:  ', mkey);",
+					"    //     path.data.replaceAll('[mkey]', mkey);",
+					"    //     path.replaceAll('[mkey]', mkey);",
+					"    //     console.log(\"after replacing path\", path);",
+					"    // } ",
+					"    api_call = path",
+					"    console.log('API CALL :   ', api_call);",
+					"",
+					"    var AUTH_TYPE;",
+					"    var hmacDigest;",
+					"",
+					"    //The current time, formatted as RFC 2822. This must be the same string as the \"Date\" header (or X-Duo-Date header).",
+					"    var moment = require('moment');",
+					"    var timestamp = moment().format(\"ddd, DD MMM YYYY HH:mm:ss ZZ\");",
+					"    pm.environment.set(\"timestampHeader\",timestamp);",
+					"",
+					"    switch (duo_auth_ver) {",
+					"        case 'v2':",
+					"            AUTH_TYPE = 'HMAC-SHA1';",
+					"            var params_unsorted = \"\";",
+					"            var params_array = [];",
+					"            //Create unsorted array of parameters from either URL or Body",
+					"            //Assuming POST parameters are in the Body, GET paramters are in URL",
+					"            //(technically it looks like POST can be in the URL as well)",
+					"            if (Object.keys(requestBody).length !== 0) {",
+					"                for (var parameter1 in requestBody) {",
+					"                    params_unsorted = parameter1 + \"=\" + requestBody[parameter1];",
+					"                    params_array.push(params_unsorted);",
+					"                }",
+					"            } else {",
+					"                params_unsorted = q_str;",
+					"                if (q_str) {",
+					"                    params_array = params_unsorted.split(\"&\");",
+					"                }",
+					"            }",
+					"            console.log(params_array);",
+					"            params_array.sort();                    //lexicographically sort parameters by key",
+					"            var encoded_params = \"\";               ",
+					"            if (params_array[0] !== \"\"){            //check if there are any Params to encode and create the string from",
+					"                var encoded_params_array = params_array.map(urlEncodeParams);   //create URL-encoded array of key=value pairs from the sorted array",
+					"                encoded_params = encoded_params_array.join(\"&\");                //create string of parameters joined by &",
+					"            }",
+					"            console.log(encoded_params);",
+					"            //Then concatenate these components with (line feed) newlines",
+					"            var requestData =  timestamp+\"\\n\"+httpMethod+\"\\n\"+API_HOSTNAME+\"\\n\"+api_call+\"\\n\"+encoded_params;",
+					"            console.log(requestData);",
+					"            //compute the HMAC-SHA1 of this canonical representation, using your Duo application's secret key as the HMAC key",
+					"            var hmacDigest = CryptoJS.HmacSHA1(requestData, SKEY);",
+					"            console.log(hmacDigest);",
+					"            pm.request.headers.add({key: 'Content-Type', value: 'application/x-www-form-urlencoded' })",
+					"            break;",
+					"        case 'v5':",
+					"            AUTH_TYPE = 'HMAC-SHA512';",
+					"            var body_length = Object.keys(requestBody).length",
+					"            var encoded_params = \"\";  ",
+					"            var requestData = \"\"",
+					"            ",
+					"            if (body_length != 0) {  ",
+					"                var jsonData = JSON.parse(pm.request.body.toJSON().raw)",
+					"                jsonData = JSON.stringify(jsonData)",
+					"                encoded_params = jsonData",
+					"                console.log(encoded_params)",
+					"                requestData =  timestamp+\"\\n\"+httpMethod+\"\\n\"+API_HOSTNAME+\"\\n\"+api_call+\"\\n\"+ \"\" +\"\\n\"+CryptoJS.SHA512(encoded_params)+\"\\n\"+CryptoJS.SHA512(\"\");",
+					"                pm.request.body = jsonData",
+					"            }",
+					"            else {",
+					"                params_unsorted = q_str;",
+					"                if(params_unsorted.length > 0){",
+					"                    params_array = params_unsorted.split(\"&\");",
+					"                    params_array.sort(); ",
+					"                    var encoded_params_array = params_array.map(urlEncodeParams);   //create URL-encoded array of key=value pairs from the sorted array",
+					"                    encoded_params = encoded_params_array.join(\"&\");  ",
+					"                    }",
+					"                requestData = timestamp+\"\\n\"+httpMethod+\"\\n\"+API_HOSTNAME+\"\\n\"+api_call+\"\\n\"+encoded_params+\"\\n\"+CryptoJS.SHA512(\"\")+\"\\n\"+CryptoJS.SHA512(\"\")",
+					"            }",
+					"             //compute the HMAC-SHA1 of this canonical representation, using your Duo application's secret key as the HMAC key",
+					"            var hmacDigest = CryptoJS.HmacSHA512(requestData, SKEY);",
+					"            pm.request.headers.add({key: 'Content-Type', value: 'application/json' })",
+					"            break;",
+					"    }",
+					"          ",
+					"    //Use HTTP Basic Authentication for the request, using your integration key as the username and the HMAC-SHA1 signature as the password.",
+					"    var prebase = IKEY+\":\"+ hmacDigest;",
+					"    console.log('prebase');",
+					"    console.log(prebase);",
+					"     ",
+					"    //encodes a string in base-64",
+					"    var baseComplete = btoa(prebase);",
+					"    console.log(baseComplete);",
+					" ",
+					"    var authHeader = \"Basic \"+ baseComplete;",
+					"    return authHeader;",
+					"    ",
+					"}",
+					"",
+					" ",
+					"function urlEncodeParams(value, index, array) {",
+					"    //split the Key and Value at the first \"=\", URL-encode the Value, and rejoin them with an \"=\"",
+					"    //If the separator in the split() is a regular expression that contains capturing parentheses (), matched results are included in the array",
+					"    return value.split(/=(.+)/)[0] + \"=\" + encodeURIComponent(value.split(/=(.+)/)[1]);",
+					"}",
+					"",
+					"function realize(template) {",
+					"    console.log('Template :', template)",
+					"    const rgx = /{{[a-z|A-Z|0-9]*}}/gm;",
+					"    const matches = [...template.matchAll(rgx)];",
+					"    matches.forEach((match) => {",
+					"        template = template.replace(",
+					"        match[0],",
+					"        pm.environment.get(match[0].substring(2, match[0].length - 2))",
+					"    );",
+					"  });",
+					"  return template;",
+					"}",
+					"",
+					"// Begin script execution",
+					"var duo_auth_ver;",
+					"var req_url = request.url;",
+					"var q_str = URL.parse(request.url).query",
+					"if (q_str == null) {",
+					"    q_str = \"\";",
+					"}",
+					"",
+					"",
+					"console.log('q_str length:')",
+					"console.log(q_str.length)",
+					"//var path = URL.parse(request.url).pathname.split(\"/\");",
+					"var path = realize(req_url).split(\"/\");",
+					"path = path.slice(3);",
+					"path = path.join('/');",
+					"path = '/' + path;",
+					"if (req_url.includes('/v1/')) {",
+					"    duo_auth_ver = 'v2'; ",
+					"} else if (req_url.includes('/v2/')) {",
+					"    duo_auth_ver = 'v5'; ",
+					"}",
+					"console.log('Duo Authentication Version:')",
+					"console.log(duo_auth_ver)",
+					"",
+					"",
+					"// Check if apihost variable substition is needed from the request url",
+					"if (req_url.includes('{{apihost}}')) {",
+					"    var hostname = pm.environment.get('apihost');",
+					"    pm.environment.set(\"hmacAuthHeader\", getAuthHeader(request.method, hostname, path, q_str, request.data, duo_auth_ver));",
+					"} else {",
+					"    pm.environment.set(\"hmacAuthHeader\", getAuthHeader(request.method, request.hostname, path, q_str, request.data, duo_auth_ver));",
+					"}",
+					"",
+					"",
+					"pm.request.headers.add({key: 'Date', value: \"{{timestampHeader}}\" })",
+					"pm.request.headers.add({key: 'Authorization', value: \"{{hmacAuthHeader}}\" })"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ikey",
+			"value": ""
+		},
+		{
+			"key": "skey",
+			"value": ""
+		},
+		{
+			"key": "apihost",
+			"value": ""
+		},
+		{
+			"key": "timestampHeader",
+			"value": ""
+		},
+		{
+			"key": "hmacAuthHeader",
+			"value": ""
+		}
+	]
+}
