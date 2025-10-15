@@ -6383,6 +6383,172 @@
 				}
 			],
 			"description": "https://duo.com/docs/adminapi#account-info"
+		},
+		{
+			"name": "IDV",
+			"item": [
+				{
+					"name": "Start Verification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify access_code\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.response.access_code).to.exist.and.to.have.lengthOf.at.least(1, \"Access code should not be empty\");",
+									"",
+									"    pm.collectionVariables.set(\"idv_access_code\", responseData.response.access_code);",
+									"    console.log(\"IDV Access code: \", pm.collectionVariables.get(\"idv_access_code\"));",
+									"});",
+									"",
+									"pm.test(\"Verify inquiry_id\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.response.inquiry_id).to.exist.and.to.have.lengthOf.at.least(1, \"Inquiry ID should not be empty\");",
+									"",
+									"    pm.collectionVariables.set(\"idv_inquiry_id\", responseData.response.inquiry_id);",
+									"    console.log(\"IDV Inquiry ID: \", pm.collectionVariables.get(\"idv_inquiry_id\"));",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://{{apihost}}/admin/v2/identity_verification/{{user_id}}/start",
+							"protocol": "https",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"admin",
+								"v2",
+								"identity_verification",
+								"{{user_id}}",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Verification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify access_code\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.response.access_code).to.exist.and.to.have.lengthOf.at.least(1, \"Access code should not be empty\");",
+									"",
+									"    pm.collectionVariables.set(\"idv_access_code\", responseData.response.access_code);",
+									"    console.log(\"Access code: \", pm.collectionVariables.get(\"idv_access_code\"));",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://{{apihost}}/admin/v2/identity_verification/{{user_id}}/cancel?inquiry_id={{idv_inquiry_id}}",
+							"protocol": "https",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"admin",
+								"v2",
+								"identity_verification",
+								"{{user_id}}",
+								"cancel"
+							],
+							"query": [
+								{
+									"key": "inquiry_id",
+									"value": "{{idv_inquiry_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verification Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify access_code\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.response.access_code).to.exist.and.to.have.lengthOf.at.least(1, \"Access code should not be empty\");",
+									"",
+									"    pm.collectionVariables.set(\"idv_access_code\", responseData.response.access_code);",
+									"    console.log(\"Access code: \", pm.collectionVariables.get(\"idv_access_code\"));",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{apihost}}/admin/v2/identity_verification/{{user_id}}/status",
+							"protocol": "https",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"admin",
+								"v2",
+								"identity_verification",
+								"{{user_id}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -6736,6 +6902,14 @@
 			"key": "timestampDaysOffset",
 			"value": "",
 			"type": "string"
+		},
+		{
+			"key": "idv_access_code",
+			"value": ""
+		},
+		{
+			"key": "idv_inquiry_id",
+			"value": ""
 		}
 	]
 }
